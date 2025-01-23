@@ -6,14 +6,14 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:permission_handler/permission_handler.dart';
 import 'result_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class TextRecognitionFromCamera extends StatefulWidget {
+  const TextRecognitionFromCamera({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TextRecognitionFromCamera> createState() => _TextRecognitionFromCameraState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _TextRecognitionFromCameraState extends State<TextRecognitionFromCamera> with WidgetsBindingObserver {
   bool _isPermissionGranted = false;
 
   late final Future<void> _future;
