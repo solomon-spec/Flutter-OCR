@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ocr_app/text-from-camera.dart';
 import 'package:flutter_ocr_app/text-from_document.dart';
-
+import 'package:flutter_ocr_app/recent_scan.dart';
 import 'package:flutter_ocr_app/settings-page.dart';
 
 class HomePage extends StatelessWidget {
@@ -50,7 +50,11 @@ class HomePage extends StatelessWidget {
                       'label': 'Scan Text',
                       'page': const TextRecognitionFromCamera()
                     },
-                    {'icon': Icons.history, 'label': 'Recent Scans'},
+                    {
+                      'icon': Icons.history,
+                      'label': 'Recent Scans',
+                      'page': RecentScansPage()
+                    },
                     {'icon': Icons.camera, 'label': 'Take Photo'},
                     {
                       'icon': Icons.photo_library,

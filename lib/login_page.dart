@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,6 +13,32 @@ class _LoginPageState extends State<LoginPage> {
   String _username = '';
   String _password = '';
 
+  // Future<void> loginUser() async {
+  //   const url = 'http://192.168.27.62:5001/login';
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: json.encode({
+  //       'username': _username,
+  //       'password': _password,
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Login successful.'),
+  //       backgroundColor: Colors.green,
+  //     ));
+
+  //     Navigator.pushNamed(context, '/home');
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('Error: ${response.body}'),
+  //       backgroundColor: Colors.red,
+  //     ));
+  //   }
+  // }
   Future<void> loginUser() async {
     const url = 'http://192.168.27.62:5001/login';
     final response = await http.post(
@@ -25,10 +52,18 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Login successful. Token: ${data['token']}'),
+      final token =
+          data['token']; // Assuming the token is returned in the response
+
+      // Store the token using shared_preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', token);
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Login successful.'),
         backgroundColor: Colors.green,
       ));
+
       Navigator.pushNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
