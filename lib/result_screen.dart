@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For clipboard functionality
 // import 'package:share/share.dart'; // For sharing text
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert'; // For JSON encoding and decoding
 
 class ResultScreen extends StatefulWidget {
   final String text;
@@ -9,6 +12,11 @@ class ResultScreen extends StatefulWidget {
 
   @override
   _ResultScreenState createState() => _ResultScreenState();
+}
+
+Future<String?> _getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('auth_token');
 }
 
 class _ResultScreenState extends State<ResultScreen> {
@@ -35,15 +43,58 @@ class _ResultScreenState extends State<ResultScreen> {
     // Share.share(displayedText, subject: 'Extracted Text');
   }
 
-  void saveAsFile() {
-    // TODO: Implement file-saving functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Save as file feature coming soon!'),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.deepPurple.shade400,
-      ),
-    );
+  void saveAsFile() async {
+    // Replace this with the actual text you want to save
+
+    const url =
+        'http://192.168.27.62:5001/recent-scans'; // Replace with your API endpoint
+    final token = await _getToken(); // Retrieve the stored token
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No authentication token found. Please log in again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Include the token in the header
+        },
+        body: json.encode({
+          'text': displayedText, // Send the text to save
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Scan saved successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save scan: ${response.body}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void clearText() {

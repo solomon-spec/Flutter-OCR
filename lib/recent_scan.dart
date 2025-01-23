@@ -1,117 +1,8 @@
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class RecentScansPage extends StatefulWidget {
-//   @override
-//   _RecentScansPageState createState() => _RecentScansPageState();
-// }
-
-// class _RecentScansPageState extends State<RecentScansPage> {
-//   List<Map<String, String>> _scans = [];
-//   bool _isLoading = true;
-//   String _errorMessage = '';
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchRecentScans();
-//   }
-
-//   // Function to retrieve the stored token
-//   Future<String?> _getToken() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     return prefs.getString('auth_token');
-//   }
-
-//   // Function to fetch recent scans from the API
-//   Future<void> _fetchRecentScans() async {
-//     const url = 'http://192.168.27.62:5001/recent-scans';
-//     final token = await _getToken();
-
-//     if (token == null) {
-//       setState(() {
-//         _isLoading = false;
-//         _errorMessage = 'No authentication token found. Please log in again.';
-//       });
-//       return;
-//     }
-
-//     try {
-//       final response = await http.get(
-//         Uri.parse(url),
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': 'Bearer $token', // Include the token in the header
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         final data = json.decode(response.body);
-//         final List<dynamic> scans = data['scans']; // Assuming the response contains a 'scans' key
-
-//         setState(() {
-//           _scans = scans.map<Map<String, String>>((scan) {
-//             return {
-//               'date': scan['date'],
-//               'text': scan['text'],
-//             };
-//           }).toList();
-//           _isLoading = false;
-//         });
-//       } else {
-//         setState(() {
-//           _isLoading = false;
-//           _errorMessage = 'Failed to load scans: ${response.body}';
-//         });
-//       }
-//     } catch (e) {
-//       setState(() {
-//         _isLoading = false;
-//         _errorMessage = 'An error occurred: $e';
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Recent Scans'),
-//         backgroundColor: Colors.purple,
-//       ),
-//       body: _isLoading
-//           ? const Center(child: CircularProgressIndicator())
-//           : _errorMessage.isNotEmpty
-//               ? Center(child: Text(_errorMessage, style: TextStyle(color: Colors.red)))
-//               : _scans.isEmpty
-//                   ? const Center(child: Text('No scans found.'))
-//                   : ListView.builder(
-//                       itemCount: _scans.length,
-//                       itemBuilder: (context, index) {
-//                         final scan = _scans[index];
-//                         return Card(
-//                           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-//                           child: ListTile(
-//                             title: Text(scan['text']!),
-//                             subtitle: Text(scan['date']!),
-//                             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-//                             onTap: () {
-//                               // Handle tap on a scan (e.g., navigate to details page)
-//                             },
-//                           ),
-//                         );
-//                       },
-//                     ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class RecentScansPage extends StatefulWidget {
   @override
@@ -239,11 +130,21 @@ class _RecentScansPageState extends State<RecentScansPage> {
   }
 }
 
-// ResultScreen to display the full text of the scan
 class ResultScreen extends StatelessWidget {
   final String text;
 
   const ResultScreen({Key? key, required this.text}) : super(key: key);
+
+  // Function to copy text to clipboard
+  void _copyToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Text copied to clipboard!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +152,13 @@ class ResultScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Scan Result'),
         backgroundColor: Colors.purple,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.copy),
+            onPressed: () => _copyToClipboard(context),
+            tooltip: 'Copy to Clipboard',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

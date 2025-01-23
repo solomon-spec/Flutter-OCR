@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,10 +35,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
 
     if (response.statusCode == 201) {
+      log('User registered successfully');
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('User registered successfully'),
         backgroundColor: Colors.green,
       ));
+      // Navigator.pushNamed(context, '/login');
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error: ${response.body}'),
