@@ -9,68 +9,68 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Image to Text Converter'),
+        title: const Text(
+          'Image to Text Converter',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
+        elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
               'Extract text from images effortlessly',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
                 color: Colors.deepPurple,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                childAspectRatio: 1.3,
-                children: [
-                  _buildFeatureButton(
-                    context: context,
-                    icon: Icons.camera_alt,
-                    label: 'Scan Text',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
-                      );
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1,
+                ),
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  final features = [
+                    {
+                      'icon': Icons.camera_alt,
+                      'label': 'Scan Text',
+                      'page': const HomeScreen()
                     },
-                  ),
-                  _buildFeatureButton(
+                    {'icon': Icons.history, 'label': 'Recent Scans'},
+                    {'icon': Icons.camera, 'label': 'Take Photo'},
+                    {'icon': Icons.photo_library, 'label': 'Upload Image'},
+                  ];
+                  return _buildFeatureCard(
                     context: context,
-                    icon: Icons.history,
-                    label: 'Recent Scans',
-                    onPressed: () {},
-                  ),
-                  _buildFeatureButton(
-                    context: context,
-                    icon: Icons.camera,
-                    label: 'Take Photo',
+                    icon: features[index]['icon'] as IconData,
+                    label: features[index]['label'] as String,
                     onPressed: () {
+                      if (features[index]['page'] != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  features[index]['page'] as Widget),
+                        );
+                      }
                     },
-                  ),
-                  _buildFeatureButton(
-                    context: context,
-                    icon: Icons.photo_library,
-                    label: 'Upload Image',
-                    onPressed: () {
-                    },
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
                   icon: Icons.help,
                   label: 'Help',
                   onPressed: () {
-                    // TODO: Navigate to help
+                    // TODO: Add Help navigation
                   },
                 ),
               ],
@@ -102,6 +102,10 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.deepPurple,
         unselectedItemColor: Colors.grey,
+        currentIndex: 0,
+        onTap: (index) {
+          // TODO: Add navigation logic
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -116,38 +120,46 @@ class HomePage extends StatelessWidget {
             label: 'Settings',
           ),
         ],
-        onTap: (index) {
-        },
       ),
     );
   }
 
-  Widget _buildFeatureButton({
+  Widget _buildFeatureCard({
     required BuildContext context,
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
   }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurple.shade100,
-        padding: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.deepPurple.shade50,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepPurple.shade100,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 40, color: Colors.deepPurple),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 36, color: Colors.deepPurple),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

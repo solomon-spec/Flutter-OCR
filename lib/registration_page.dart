@@ -17,7 +17,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _address = '';
 
   Future<void> registerUser() async {
-    final url = 'http://192.168.27.62:5001/register';
+    const url = 'http://192.168.27.62:5001/register';
 
     final response = await http.post(
       Uri.parse(url),

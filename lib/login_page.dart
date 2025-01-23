@@ -13,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
 
   Future<void> loginUser() async {
-    final url = 'http://localhost:5000/login';
+    const url = 'http://192.168.27.62:5001/login';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         content: Text('Login successful. Token: ${data['token']}'),
         backgroundColor: Colors.green,
       ));
+      Navigator.pushNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error: ${response.body}'),
