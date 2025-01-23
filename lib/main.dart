@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ocr_app/home-page.dart';
-import 'login_page.dart';
-import 'registration_page.dart';
+import 'intro-page.dart';
 
 void main() {
   runApp(const App());
@@ -17,12 +15,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: RegistrationPage(), // Default to HomePage
-      routes: {
-        '/home': (context) => HomePage(),
-        '/login': (context) => LoginPage(),
-        '/register': (context) => RegistrationPage(),
-      },
+      home: IntroPage(),
     );
   }
 }
