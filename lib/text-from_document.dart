@@ -45,47 +45,122 @@ class _TextRecognitionFromGalleryScreenState
         title: const Text('Upload and Scan'),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepPurple.shade400, Colors.deepPurple.shade700],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
-      body: Center(
-        child: _isPermissionGranted
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: isLoading ? null : _selectImageFromGallery,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple.shade50, Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: _isPermissionGranted
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: isLoading ? 80 : 200,
+                      height: isLoading ? 80 : 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(isLoading ? 40 : 20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.deepPurple.withOpacity(0.2),
+                            blurRadius: 15,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.deepPurple,
+                                strokeWidth: 3,
+                              ),
+                            )
+                          : IconButton(
+                              icon: Icon(
+                                Icons.upload,
+                                size: 60,
+                                color: Colors.deepPurple.shade400,
+                              ),
+                              onPressed: _selectImageFromGallery,
+                            ),
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      'Upload an Image to Scan Text',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.deepPurple.shade700,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (isLoading)
-                          const SizedBox(
-                            height: 21,
-                            width: 21,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2.57,
-                            ),
-                          ),
-                        if (isLoading) const SizedBox(width: 20),
-                        const Text(
-                          "Upload and Scan",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
+                    const SizedBox(height: 10),
+                    Text(
+                      'Supported formats: JPG, PNG',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.deepPurple.shade400,
+                      ),
                     ),
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 60,
+                        color: Colors.deepPurple.shade400,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Gallery permission denied',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _requestGalleryPermission,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple.shade400,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Grant Permission',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              )
-            : const Text(
-                'Gallery permission denied',
-                textAlign: TextAlign.center,
-              ),
+                ),
+        ),
       ),
     );
   }
