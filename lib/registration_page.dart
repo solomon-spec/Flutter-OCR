@@ -33,7 +33,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
 
     if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('User registered successfully'),
         backgroundColor: Colors.green,
       ));
@@ -47,76 +47,152 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Registration')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _username = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _name = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _email = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _password = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Phone Number'),
-                onSaved: (value) => _phoneNumber = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Address'),
-                onSaved: (value) => _address = value!,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    registerUser();
-                  }
-                },
-                child: Text('Register'),
-              ),
-            ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const Column(
+                  children: <Widget>[
+                    SizedBox(height: 60.0),
+                    Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Create your account",
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      buildTextField(
+                        hintText: "Username",
+                        icon: Icons.person,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a username';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _username = value!,
+                      ),
+                      buildTextField(
+                        hintText: "Name",
+                        icon: Icons.person_outline,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _name = value!,
+                      ),
+                      buildTextField(
+                        hintText: "Email",
+                        icon: Icons.email,
+                        validator: (value) =>
+                            (value == null || !value.contains('@'))
+                                ? "Enter a valid email"
+                                : null,
+                        onSaved: (value) => _email = value!,
+                      ),
+                      buildTextField(
+                        hintText: "Password",
+                        icon: Icons.lock,
+                        validator: (value) {
+                          if (value == null || value.length < 6) {
+                            return 'Password must be at least 6 characters long';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _password = value!,
+                      ),
+                      buildTextField(
+                        hintText: "Address",
+                        icon: Icons.home,
+                        onSaved: (value) => _address = value!,
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      registerUser();
+                    }
+                  },
+                  child: Text(
+                    "Register",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.purple,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text("Already have an account?"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTextField({
+    required String hintText,
+    required IconData icon,
+    bool obscureText = false,
+    String? Function(String?)? validator,
+    required void Function(String?) onSaved,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: hintText,
+          prefixIcon: Icon(icon),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide.none,
+          ),
+          fillColor: Colors.purple.withOpacity(0.1),
+          filled: true,
+        ),
+        obscureText: obscureText,
+        validator: validator,
+        onSaved: onSaved,
       ),
     );
   }

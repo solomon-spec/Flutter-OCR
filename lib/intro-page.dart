@@ -8,7 +8,10 @@ class IntroPage extends StatelessWidget {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.lightBlueAccent],
+            colors: [
+              Color.fromARGB(255, 63, 2, 73),
+              Color.fromARGB(255, 232, 197, 238)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -59,12 +62,13 @@ class IntroPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue,
+                      foregroundColor: Colors.purple,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius:
+                            BorderRadius.circular(10), // Smaller radius
                       ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 70), // Wider button
                     ),
                     child: const Text(
                       'Login',
@@ -78,13 +82,14 @@ class IntroPage extends StatelessWidget {
                       Navigator.pushNamed(context, '/register');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
+                      backgroundColor: Colors.purple[700],
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius:
+                            BorderRadius.circular(10), // Smaller radius
                       ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 60), // Wider button
                     ),
                     child: const Text(
                       'Register',

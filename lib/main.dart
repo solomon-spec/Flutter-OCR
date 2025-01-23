@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
+import 'registration_page.dart';
 import 'intro-page.dart';
 
 void main() {
-  runApp(const App());
+  runApp(MyApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blue,
       ),
-      home: IntroPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => IntroPage(),
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegistrationPage(),
+      },
     );
   }
 }

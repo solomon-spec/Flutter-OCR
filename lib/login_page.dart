@@ -40,35 +40,83 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _username = value!,
+              Column(
+                children: [
+                  const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Welcome back! Log in to your account.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _password = value!,
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Username",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                        fillColor: Colors.purple.withOpacity(0.1),
+                        filled: true,
+                        prefixIcon: const Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _username = value!,
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                        fillColor: Colors.purple.withOpacity(0.1),
+                        filled: true,
+                        prefixIcon: const Icon(Icons.lock),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _password = value!,
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
-              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -76,7 +124,33 @@ class _LoginPageState extends State<LoginPage> {
                     loginUser();
                   }
                 },
-                child: Text('Login'),
+                style: ElevatedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.purple,
+                ),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SizedBox(height: 20),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
